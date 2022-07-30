@@ -9,89 +9,72 @@
  */
 
 import React from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+import FolderSelect from './Components/FolderSelect';
+
+
 import {
+  ProgressViewIOSComponent,
   SafeAreaView,
   ScrollView,
   StatusBar,
   StyleSheet,
   Text,
-  useColorScheme,
   View,
 } from 'react-native';
 
-import {
-  Colors,
-  DebugInstructions,
-  Header,
-  LearnMoreLinks,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
 
-const Section: React.FC<{
-  title: string;
-}> = ({children, title}) => {
-  const isDarkMode = useColorScheme() === 'dark';
-  return (
-    <View style={styles.sectionContainer}>
-      <Text
-        style={[
-          styles.sectionTitle,
-          {
-            color: isDarkMode ? Colors.white : Colors.black,
-          },
-        ]}>
-        {title}
-      </Text>
-      <Text
-        style={[
-          styles.sectionDescription,
-          {
-            color: isDarkMode ? Colors.light : Colors.dark,
-          },
-        ]}>
-        {children}
-      </Text>
-    </View>
-  );
-};
+const getDirectory = async () => {
+  return await AsyncStorage.getItem('@lDir')
+}
 
-const App = () => {
-  const isDarkMode = useColorScheme() === 'dark';
+interface propsType {}
+interface stateType {
+  loading: boolean,
+  lDir: string
+}
 
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
-  };
 
-  return (
-    <SafeAreaView style={backgroundStyle}>
-      <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
+class App extends React.Component<propsType, stateType> {
+
+  constructor(props: propsType, state: stateType) {
+    super(props)
+
+    this.state = {
+      loading: true,
+      lDir: ''
+    }
+  }
+
+  componentDidMount() {
+    getDirectory().then((result) => {
+      if (result === null ) this.setState({lDir: 'Empty'})
+      else this.setState({lDir: result})
+      this.setState({loading: false})
+    })
+  }
+
+  render() {
+
+    let home
+
+    if (this.state.lDir === 'Empty') home = <FolderSelect />
+    else home = <Text>{this.state.lDir}</Text>
+
+    return(
+    <SafeAreaView>
+      <StatusBar />
       <ScrollView
-        contentInsetAdjustmentBehavior="automatic"
-        style={backgroundStyle}>
-        <Header />
-        <View
-          style={{
-            backgroundColor: isDarkMode ? Colors.black : Colors.white,
-          }}>
-          <Section title="Step One">
-            Edit <Text style={styles.highlight}>App.tsx</Text> to change this
-            screen and then come back to see your edits.
-          </Section>
-          <Section title="See Your Changes">
-            <ReloadInstructions />
-          </Section>
-          <Section title="Debug">
-            <DebugInstructions />
-          </Section>
-          <Section title="Learn More">
-            Read the docs to discover what to do next:
-          </Section>
-          <LearnMoreLinks />
+        contentInsetAdjustmentBehavior="automatic">
+        <View>
+          {home}
         </View>
       </ScrollView>
     </SafeAreaView>
-  );
-};
+    )
+  }
+}
 
 const styles = StyleSheet.create({
   sectionContainer: {
