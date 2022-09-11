@@ -1,17 +1,12 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * Generated with the TypeScript template
- * https://github.com/react-native-community/react-native-template-typescript
- *
- * @format
- */
-
 import React from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import FolderSelect from './Components/FolderSelect';
+import MediaStore from './NativeModules/MediaStore'
+
+import ReactNative from 'react-native';
+const { MediaStoreModule } = ReactNative.NativeModules;
+
 
 
 import {
@@ -24,10 +19,6 @@ import {
   View,
 } from 'react-native';
 
-
-const getDirectory = async () => {
-  return await AsyncStorage.getItem('@lDir')
-}
 
 interface propsType {}
 interface stateType {
@@ -47,20 +38,29 @@ class App extends React.Component<propsType, stateType> {
     }
   }
 
+  async getDirectory () {
+
+    let result = await MediaStoreModule.helloworld()
+
+    console.log(result)
+    return result
+  }
+
   componentDidMount() {
-    getDirectory().then((result) => {
-      if (result === null ) this.setState({lDir: 'Empty'})
-      else this.setState({lDir: result})
-      this.setState({loading: false})
-    })
+    
+    // this.getDirectory().then((result) => {
+    //   if (result === null ) this.setState({lDir: 'Empty'})
+    //   else this.setState({lDir: result})
+    //   this.setState({loading: false})
+    // })
   }
 
   render() {
 
-    let home
+    let home = this.getDirectory()
 
-    if (this.state.lDir === 'Empty') home = <FolderSelect />
-    else home = <Text>{this.state.lDir}</Text>
+    // if (this.state.lDir === 'Empty') home = <FolderSelect />
+    // else home = <Text>{this.state.lDir}</Text>
 
     return(
     <SafeAreaView>
@@ -68,7 +68,7 @@ class App extends React.Component<propsType, stateType> {
       <ScrollView
         contentInsetAdjustmentBehavior="automatic">
         <View>
-          {home}
+          <Text></Text>
         </View>
       </ScrollView>
     </SafeAreaView>
