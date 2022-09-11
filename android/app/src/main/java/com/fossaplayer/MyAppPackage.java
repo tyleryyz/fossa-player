@@ -1,4 +1,4 @@
-package com.fossaplayer; // replace your-app-name with your app’s name
+package com.fossaplayer;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.bridge.NativeModule;
 import com.facebook.react.bridge.ReactApplicationContext;

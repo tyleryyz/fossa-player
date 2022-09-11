@@ -1,8 +1,8 @@
-import ReactNative from 'react-native';
-const { MediaStoreModule } = ReactNative.NativeModules;
+import { NativeModules } from 'react-native';
+const { MediaStoreModule } = NativeModules;
 
-interface MediaStore {
-    helloworld() : string
+interface MediaStoreInterface {
+    helloworld() : Promise<string>
 }
 
-export default MediaStoreModule as MediaStore
+export default MediaStoreModule as MediaStoreInterface

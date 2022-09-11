@@ -2,10 +2,9 @@ import React from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import FolderSelect from './Components/FolderSelect';
-import MediaStore from './NativeModules/MediaStore'
+import MediaStoreModule from './NativeModules/MediaStore'
 
 import ReactNative from 'react-native';
-const { MediaStoreModule } = ReactNative.NativeModules;
 
 
 
@@ -39,28 +38,24 @@ class App extends React.Component<propsType, stateType> {
   }
 
   async getDirectory () {
-
-    let result = await MediaStoreModule.helloworld()
-
-    console.log(result)
-    return result
+    return (await MediaStoreModule.helloworld())
   }
 
-  componentDidMount() {
-    
-    // this.getDirectory().then((result) => {
-    //   if (result === null ) this.setState({lDir: 'Empty'})
-    //   else this.setState({lDir: result})
-    //   this.setState({loading: false})
-    // })
+  async componentDidMount() {
+    this.setState({'lDir': await this.getDirectory()})
   }
 
   render() {
 
-    let home = this.getDirectory()
+    let lDir = this.state.lDir
+    console.log(lDir)
 
-    // if (this.state.lDir === 'Empty') home = <FolderSelect />
-    // else home = <Text>{this.state.lDir}</Text>
+    if (lDir === null || lDir === undefined) {
+      lDir = "I'm fed up with this worald!"
+    }
+
+    // if (this.state.lDir === 'Empty') lDir = <FolderSelect />
+    // else lDir = <Text>{this.state.lDir}</Text>
 
     return(
     <SafeAreaView>
@@ -68,7 +63,7 @@ class App extends React.Component<propsType, stateType> {
       <ScrollView
         contentInsetAdjustmentBehavior="automatic">
         <View>
-          <Text></Text>
+          <Text>{lDir}</Text>
         </View>
       </ScrollView>
     </SafeAreaView>

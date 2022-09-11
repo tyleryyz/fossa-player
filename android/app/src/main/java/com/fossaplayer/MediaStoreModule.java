@@ -4,6 +4,7 @@ import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
+import com.facebook.react.bridge.Promise;
 
 public class MediaStoreModule extends ReactContextBaseJavaModule {
 
@@ -17,7 +18,8 @@ public class MediaStoreModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public String helloworld() {
-        return ("hello world");
+    public void helloworld(Promise promise) {
+        String hello = "oh hai mark";
+        promise.resolve(hello);
     }
 }
