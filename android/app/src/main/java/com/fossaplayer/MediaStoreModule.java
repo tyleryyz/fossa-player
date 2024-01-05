@@ -55,7 +55,6 @@ public class MediaStoreModule extends ReactContextBaseJavaModule {
 
     albumsCursor.moveToFirst();
     while (albumsCursor.moveToNext()) {
-      System.out.println("Album Cursor Success");
       WritableNativeMap album = new WritableNativeMap();
       album.putString("album", albumsCursor.getString(albumsCursor.getColumnIndex(MediaStore.Audio.Albums.ALBUM)));
       album.putString("artist", albumsCursor.getString(albumsCursor.getColumnIndex(MediaStore.Audio.Albums.ARTIST)));
@@ -94,8 +93,6 @@ public class MediaStoreModule extends ReactContextBaseJavaModule {
 
   @ReactMethod
   public void getSongs(String albumId, Promise promise) {
-
-    System.out.printf("albumId: %s\n", albumId);
 
     WritableNativeArray songs = new WritableNativeArray();
 

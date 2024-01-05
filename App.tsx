@@ -37,7 +37,6 @@ class App extends React.Component<propsType, stateType> {
   }
 
   async getSongs (albumId:string) {
-    console.log('getSongs:', albumId)
     return (await MediaStoreModule.getSongs(albumId))
   }
 
@@ -54,30 +53,7 @@ class App extends React.Component<propsType, stateType> {
 
   render() {
 
-    let albums = this.state.albums
-
     let songs = this.state.songs
-
-    console.log(songs)
-
-    // console.log(albums[0]?.album)
-    // console.log(albums[0]?.artist)
-    // console.log(albums[0]?.duration)
-    // console.log(albums[0]?.albumId)
-
-
-    // for (let album in albums) {
-    //   console.log("=====")
-    //   console.log("Artist: " + albums[album].artist + " | Album: " + albums[album].album)
-    //   console.log("Duration: " + albums[album].duration)
-    // }
- 
-
-    for (let song in songs) {
-      console.log("=====")
-      console.log("Title: " + songs[song].title + " | Duration: " + songs[song].duration)
-      console.log("Data: " + songs[song].data)
-    }
 
     let npSong = songs[0]?.title
     // if (this.state.lDir === 'Empty') lDir = <FolderSelect />
