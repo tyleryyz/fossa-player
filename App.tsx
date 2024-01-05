@@ -1,21 +1,12 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * Generated with the TypeScript template
- * https://github.com/react-native-community/react-native-template-typescript
- *
- * @format
- */
-
 import React from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-import FolderSelect from './Components/FolderSelect';
+import MediaStoreModule from './NativeModules/MediaStore'
+import { Album } from './Interfaces/Album'
+import { Song } from './Interfaces/Song';
 
 
 import {
-  ProgressViewIOSComponent,
   SafeAreaView,
   ScrollView,
   StatusBar,
@@ -25,14 +16,11 @@ import {
 } from 'react-native';
 
 
-const getDirectory = async () => {
-  return await AsyncStorage.getItem('@lDir')
-}
-
 interface propsType {}
 interface stateType {
   loading: boolean,
-  lDir: string
+  songs: Array<Song>,
+  albums: Array<Album>,
 }
 
 
@@ -43,24 +31,33 @@ class App extends React.Component<propsType, stateType> {
 
     this.state = {
       loading: true,
-      lDir: ''
+      songs: [],
+      albums: [],
     }
   }
 
-  componentDidMount() {
-    getDirectory().then((result) => {
-      if (result === null ) this.setState({lDir: 'Empty'})
-      else this.setState({lDir: result})
-      this.setState({loading: false})
-    })
+  async getSongs (albumId:string) {
+    return (await MediaStoreModule.getSongs(albumId))
+  }
+
+  async getAlbums () {
+    return (await MediaStoreModule.getAlbums())
+  }
+
+
+  async componentDidMount() {
+    this.setState({'albums': await this.getAlbums()})
+    this.setState({'songs': await this.getSongs(this.state.albums[1]?.albumId)})
+
   }
 
   render() {
 
-    let home
+    let songs = this.state.songs
 
-    if (this.state.lDir === 'Empty') home = <FolderSelect />
-    else home = <Text>{this.state.lDir}</Text>
+    let npSong = songs[0]?.title
+    // if (this.state.lDir === 'Empty') lDir = <FolderSelect />
+    // else lDir = <Text>{this.state.lDir}</Text>
 
     return(
     <SafeAreaView>
@@ -68,7 +65,10 @@ class App extends React.Component<propsType, stateType> {
       <ScrollView
         contentInsetAdjustmentBehavior="automatic">
         <View>
-          {home}
+          {/* tabs go here */}
+          {/* <Queue Component (play queue)> */}
+          {/* <Vueue Component (library view) */}
+          <Text>{npSong}</Text>
         </View>
       </ScrollView>
     </SafeAreaView>
