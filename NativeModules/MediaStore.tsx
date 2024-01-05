@@ -5,7 +5,7 @@ const { MediaStoreModule } = NativeModules;
 
 interface MediaStoreInterface {
     getAlbums() : Promise<Array<Album>>
-    getSongs(albumId:String) : Promise<Array<Song>>
+    getSongs(albumId: string) : Promise<Array<Song>>
 
 }
 

@@ -1,16 +1,12 @@
 import React from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-import FolderSelect from './Components/FolderSelect';
 import MediaStoreModule from './NativeModules/MediaStore'
 import { Album } from './Interfaces/Album'
-
-import ReactNative from 'react-native';
-
+import { Song } from './Interfaces/Song';
 
 
 import {
-  ProgressViewIOSComponent,
   SafeAreaView,
   ScrollView,
   StatusBar,
@@ -23,7 +19,7 @@ import {
 interface propsType {}
 interface stateType {
   loading: boolean,
-  lDir: string,
+  songs: Array<Song>,
   albums: Array<Album>,
 }
 
@@ -35,12 +31,13 @@ class App extends React.Component<propsType, stateType> {
 
     this.state = {
       loading: true,
-      lDir: '',
+      songs: [],
       albums: [],
     }
   }
 
   async getSongs (albumId:string) {
+    console.log('getSongs:', albumId)
     return (await MediaStoreModule.getSongs(albumId))
   }
 
@@ -50,18 +47,23 @@ class App extends React.Component<propsType, stateType> {
 
 
   async componentDidMount() {
-    this.setState({'lDir': await this.getDirectory()})
     this.setState({'albums': await this.getAlbums()})
+    this.setState({'songs': await this.getSongs(this.state.albums[1]?.albumId)})
+
   }
 
-  async render() {
+  render() {
 
     let albums = this.state.albums
 
-    // console.log(albums[0].album)
-    // console.log(albums[0].artist)
-    // console.log(albums[0].duration)
-    // console.log(albums[0].albumId)
+    let songs = this.state.songs
+
+    console.log(songs)
+
+    // console.log(albums[0]?.album)
+    // console.log(albums[0]?.artist)
+    // console.log(albums[0]?.duration)
+    // console.log(albums[0]?.albumId)
 
 
     // for (let album in albums) {
@@ -69,12 +71,7 @@ class App extends React.Component<propsType, stateType> {
     //   console.log("Artist: " + albums[album].artist + " | Album: " + albums[album].album)
     //   console.log("Duration: " + albums[album].duration)
     // }
-    let songs
-    try {
-      songs = await this.getSongs(albums[0].albumId)
-    } catch {
-      console.log("I blew up")
-    }
+ 
 
     for (let song in songs) {
       console.log("=====")
@@ -82,7 +79,7 @@ class App extends React.Component<propsType, stateType> {
       console.log("Data: " + songs[song].data)
     }
 
-    let npSong = songs[0].title
+    let npSong = songs[0]?.title
     // if (this.state.lDir === 'Empty') lDir = <FolderSelect />
     // else lDir = <Text>{this.state.lDir}</Text>
 

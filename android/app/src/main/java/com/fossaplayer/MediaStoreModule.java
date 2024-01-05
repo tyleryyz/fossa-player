@@ -40,14 +40,8 @@ public class MediaStoreModule extends ReactContextBaseJavaModule {
     String[] projection = {
       MediaStore.Audio.Albums.ALBUM,
       MediaStore.Audio.Albums.ARTIST,
-//            MediaStore.Audio.Albums.ALBUM_ART,
       MediaStore.Audio.Albums._ID,
     };
-
-//       String selection = MediaStore.Audio.Albums._ID + "=?";
-
-//       String[] selectionArgs = new String[] {String.valueOf(albumId)};
-
 
     Cursor albumsCursor = getReactApplicationContext().getContentResolver().query(
       MediaStore.Audio.Albums.getContentUri(MediaStore.VOLUME_EXTERNAL_PRIMARY),
@@ -61,13 +55,11 @@ public class MediaStoreModule extends ReactContextBaseJavaModule {
 
     albumsCursor.moveToFirst();
     while (albumsCursor.moveToNext()) {
-
+      System.out.println("Album Cursor Success");
       WritableNativeMap album = new WritableNativeMap();
       album.putString("album", albumsCursor.getString(albumsCursor.getColumnIndex(MediaStore.Audio.Albums.ALBUM)));
       album.putString("artist", albumsCursor.getString(albumsCursor.getColumnIndex(MediaStore.Audio.Albums.ARTIST)));
 
-
-// SUPER IMPORTANT FOR GETTING SONGS
       String[] songsProjection = {
           MediaStore.Audio.Media.ALBUM_ID,
           MediaStore.Audio.Media.DURATION
@@ -75,7 +67,6 @@ public class MediaStoreModule extends ReactContextBaseJavaModule {
 
       String songsSelection = MediaStore.Audio.Media.ALBUM_ID + "=?";
       String[] songsSelectionArgs = {albumsCursor.getString(albumsCursor.getColumnIndex(MediaStore.Audio.Albums._ID))};
-
 
       Cursor songsCursor = getReactApplicationContext().getContentResolver().query(
         MediaStore.Audio.Media.getContentUri(MediaStore.VOLUME_EXTERNAL_PRIMARY),
@@ -93,7 +84,7 @@ public class MediaStoreModule extends ReactContextBaseJavaModule {
       }
       album.putString("duration", String.valueOf(duration));
 //      album.putString("albumArt", albumsCursor.getString(albumsCursor.getColumnIndex(MediaStore.Audio.Albums.ALBUM_ART)));
-      album.putInt("albumId", albumsCursor.getInt(albumsCursor.getColumnIndex(MediaStore.Audio.Albums._ID)));
+      album.putString("albumId", albumsCursor.getString(albumsCursor.getColumnIndex(MediaStore.Audio.Albums._ID)));
 
       albums.pushMap(album);
     }
@@ -102,8 +93,12 @@ public class MediaStoreModule extends ReactContextBaseJavaModule {
   }
 
   @ReactMethod
-  public void getSongs(Promise promise, String albumId) {
+  public void getSongs(String albumId, Promise promise) {
+
+    System.out.printf("albumId: %s\n", albumId);
+
     WritableNativeArray songs = new WritableNativeArray();
+
 
     String[] songsProjection = {
       MediaStore.Audio.Media.ALBUM_ID,
@@ -114,9 +109,7 @@ public class MediaStoreModule extends ReactContextBaseJavaModule {
 
     String songsSelection = MediaStore.Audio.Media.ALBUM_ID + "=?";
 
-    String[] songsSelectionArgs = {
-      albumId
-    };
+    String[] songsSelectionArgs = {String.valueOf(albumId)};
 
     Cursor songsCursor = getReactApplicationContext().getContentResolver().query(
       MediaStore.Audio.Media.getContentUri(MediaStore.VOLUME_EXTERNAL_PRIMARY),
