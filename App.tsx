@@ -36,7 +36,7 @@ class App extends React.Component<propsType, stateType> {
     }
   }
 
-  async getSongs (albumId:string) {
+  async getSongs (albumId: string) {
     return (await MediaStoreModule.getSongs(albumId))
   }
 
@@ -56,6 +56,8 @@ class App extends React.Component<propsType, stateType> {
     let songs = this.state.songs
 
     let npSong = songs[0]?.title
+
+    MediaStoreModule.play(songs[0]?.data)
     // if (this.state.lDir === 'Empty') lDir = <FolderSelect />
     // else lDir = <Text>{this.state.lDir}</Text>
 

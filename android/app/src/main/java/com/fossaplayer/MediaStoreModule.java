@@ -1,10 +1,6 @@
 package com.fossaplayer;
 
-import android.annotation.SuppressLint;
-import android.content.ContentResolver;
-import android.content.Intent;
 import android.database.Cursor;
-import android.net.Uri;
 import android.provider.MediaStore;
 
 import com.facebook.react.bridge.ReactApplicationContext;
@@ -130,15 +126,8 @@ public class MediaStoreModule extends ReactContextBaseJavaModule {
   }
 
   @ReactMethod
-  public void play(Uri uri, Promise promise) {
-
-    // start service here by creating an intent
-
-    Intent intent = new Intent();
-    intent.setAction("com.example.action.PLAY");
-
-    intent.putExtra("playbackFile", uri.toString());
-    PlaybackService playbackService = new PlaybackService();
+  public void play(String uri, Promise promise) {
+    System.out.printf("uri: %s\n", uri);
 
   }
 }
