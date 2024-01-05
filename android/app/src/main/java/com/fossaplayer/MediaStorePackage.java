@@ -17,10 +17,9 @@ public class MediaStorePackage implements ReactPackage {
     }
 
     @Override
-    public List<NativeModule> createNativeModules(
-            ReactApplicationContext reactContext) {
-        List<NativeModule> modules = new ArrayList<>();
+    public List<NativeModule> createNativeModules(ReactApplicationContext reactContext) {
 
+        List<NativeModule> modules = new ArrayList<>();
         modules.add(new MediaStoreModule(reactContext));
 
         return modules;
